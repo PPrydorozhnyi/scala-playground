@@ -15,7 +15,6 @@ trait MyList[+A] {
 
 object EmptyList extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchElementException // returns nothing. will throw an exception
-  // NotImplementedError
 
   override def tail: MyList[Nothing] = throw new NoSuchElementException
 
