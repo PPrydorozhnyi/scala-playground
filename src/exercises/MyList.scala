@@ -13,7 +13,7 @@ trait MyList[+A] {
 
 }
 
-object EmptyList extends MyList[Nothing] {
+case object EmptyList extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchElementException
 
   override def tail: MyList[Nothing] = throw new NoSuchElementException
@@ -31,8 +31,7 @@ object EmptyList extends MyList[Nothing] {
   override def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
 
-class CLinkedList[+A](h: A, t: MyList[A]) extends MyList[A] {
-  override def head: A = h
+case class CLinkedList[+A](head: A, t: MyList[A]) extends MyList[A] {
 
   override def tail: MyList[A] = this
 
@@ -41,20 +40,20 @@ class CLinkedList[+A](h: A, t: MyList[A]) extends MyList[A] {
   override def add[B >: A](element: B): MyList[B] = new CLinkedList(element, this)
 
   override def filter(predicate: MyPredicate[A]): MyList[A] = {
-    if (predicate.test(h))
-      new CLinkedList[A](h, t.filter(predicate))
+    if (predicate.test(head))
+      new CLinkedList[A](head, t.filter(predicate))
     else t.filter(predicate)
   }
 
   override def flatMap[C](myTransformer: MyTransformer[A, MyList[C]]): MyList[C] = {
-    myTransformer.transform(h) ++ t.flatMap(myTransformer)
+    myTransformer.transform(head) ++ t.flatMap(myTransformer)
   }
 
   override def map[C](myTransformer: MyTransformer[A, C]): MyList[C] = {
-    new CLinkedList(myTransformer.transform(h), t.map(myTransformer))
+    new CLinkedList(myTransformer.transform(head), t.map(myTransformer))
   }
 
-  override def ++[B >: A](list: MyList[B]): MyList[B] = new CLinkedList[B](h, t ++ list)
+  override def ++[B >: A](list: MyList[B]): MyList[B] = new CLinkedList[B](head, t ++ list)
 }
 
 trait MyPredicate[-T] {
